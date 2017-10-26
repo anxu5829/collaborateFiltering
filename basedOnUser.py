@@ -67,6 +67,8 @@ msno_song = csc_matrix((train.target, (msnoC, songC)))
 ## 协同过滤算法：基于用户
     # 1 计算用户平均评分
 Umean = usefulMethod.userAvg(msno_song)
+SIM = usefulMethod.sim(msno_song)
+
 
 
 
