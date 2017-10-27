@@ -36,3 +36,46 @@ def rowCosine(UPmatrix):
 
     return uu
 
+
+
+
+def cululateResidual(UPmatrix,UserLatent,ProductLatent):
+    ProductLatentTranspose = ProductLatent.transpose()
+    UPmatrix_hat =UserLatent.dot(ProductLatentTranspose)
+    S = (UPmatrix !=0)
+    Error = UPmatrix-UPmatrix_hat
+    Residual2 = np.multiply(Error, Error)
+    loss = np.sum(np.multiply(S,Residual2))
+    return (Error,loss)
+
+def SVD(UPmatrix,k,iterator = 10, alpha = 0.005):
+    lenOfUser     = UPmatrix.shape[0]
+    lenOfProduct  = UPmatrix.shape[1]
+    lenOfGenre    = k
+    UserLatent    = np.random.random((lenOfUser,lenOfGenre)) #csc_matrix((lenOfUser, lenOfGenre))
+    ProductLatent = np.random.random((lenOfProduct,lenOfGenre)) #csc_matrix((lenOfProduct,lenOfGenre))
+    S = (UPmatrix != 0)
+    flag = 0
+    while flag < iterator:
+        for user in np.arange(S.shape[0]):
+            for product in np.arange(S.shape[1]):
+                if S[user,product] == 1:
+                    #lossMatrix,_=cululateResidual(UPmatrix,UserLatent,ProductLatent)
+                    #Eij = lossMatrix[user,product]
+                    Eij = 0
+                    for genr in np.arange(k):
+                        Eij = Eij +UserLatent[user,genr]*ProductLatent[product,genr]
+                    Eij = UPmatrix[user,product] - Eij
+                    for genr in np.arange(k):
+                        UserLatentNew=UserLatent[user,genr] + alpha*Eij*ProductLatent[product,genr]
+                        ProductLatentNew = ProductLatent[product,genr] + alpha*Eij*UserLatent[user,genr]
+                        UserLatent[user,genr] = UserLatentNew
+                        ProductLatent[product,genr] = ProductLatentNew
+        flag+=1
+    return (UserLatent,ProductLatent)
+
+
+
+
+
+

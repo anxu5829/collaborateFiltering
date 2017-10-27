@@ -6,8 +6,8 @@ import pandas as pd
 import numpy as np
 import usefulMethod
 
-workfile = "C:\\Users\\22560\\Desktop\\recommand Sys\\recommand Sys"
-def msno_song(workfile):
+
+def UPmatrix(workfile):
 
     os.chdir(workfile)
     train = pd.read_csv("train.csv")
@@ -36,5 +36,5 @@ def msno_song(workfile):
     msnoC = msno.astype("category", categories=msnoU).cat.codes
     songC = song_id.astype("category", categories=songU).cat.codes
 
-    msno_song = csc_matrix((train.target, (msnoC, songC)))
-    return msno_song
+    UPmatrix = csc_matrix((train.target, (msnoC, songC)))
+    return UPmatrix
